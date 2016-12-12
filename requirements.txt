@@ -1,0 +1,10 @@
+# Flask and extensions
+flask
+flask-admin
+flask-login
+flask-migrate
+flask-sqlalchemy
+flask-script
+
+# Tools
+ipython
