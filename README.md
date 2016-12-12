@@ -18,6 +18,7 @@ Installation Process
   mkvirtualenv -ppython3 app
   workon app
   ```
+
 * Application
   ```bash
   pip install -r requirements.txt 
