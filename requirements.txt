@@ -5,6 +5,7 @@ flask-login
 flask-migrate
 flask-sqlalchemy
 flask-script
+flask-restful
 
 # Tools
 ipython
