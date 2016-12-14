@@ -1,6 +1,6 @@
 from flask_restful import fields
 
-from app.app import db
+from app.components import db
 from app.utils.models import HasId, Serializable
 
 class AdminUser(HasId, Serializable, db.Model):
