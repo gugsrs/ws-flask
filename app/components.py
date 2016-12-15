@@ -8,28 +8,48 @@ from flask_sqlalchemy import SQLAlchemy
 from app.utils.import_lib import get_setting
 from app.admin.utils import load_user
 
-app = Flask(
-    __name__,
-    template_folder=get_setting().TEMPLATE_FOLDER,
-    static_folder=get_setting().STATIC_FOLDER,
-)
-
-app.config.from_object(get_setting())
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
-
-from app.admin.views import AdminIndex
-admin = Admin(
-    app, index_view=AdminIndex(), 
-    **app.config['ADMIN_KWARGS']
-)
-
-from app.models import AdminUser
-login_manager = login.LoginManager()
-login_manager.init_app(app)
-login_manager.user_loader(partial(load_user, AdminUser))
+db = SQLAlchemy()
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
+def init_login(app):
+    """Init flask login"""
+    from app.models import AdminUser
+    login_manager = login.LoginManager()
+    login_manager.init_app(app)
+    login_manager.user_loader(partial(load_user, AdminUser))
+
+
+def init_admin(app):
+    """Init flask admin"""
+    from app.admin.views import AdminIndex
+    admin = Admin(
+        app, index_view=AdminIndex(),
+        **app.config['ADMIN_KWARGS']
+    )
+    # admin add_views
+
+
+def create_app(settings):
+    """Create flask app"""
+    app = Flask(
+        __name__,
+        template_folder=settings.TEMPLATE_FOLDER,
+        static_folder=settings.STATIC_FOLDER,
+    )
+
+    app.config.from_object(settings)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
+    # init db
+    db.init_app(app)
+
+    # init login
+    init_login(app)
+
+    # init admin
+    init_admin(app)
+
+    @app.route("/")
+    def hello():
+        return "Hello World!"
+    return app
