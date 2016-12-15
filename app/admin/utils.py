@@ -33,4 +33,4 @@ class BaseModelView(sqla.ModelView):
     column_default_sort = ('id', True)
 
     def is_accessible(self):
-        return login.current_user.is_authenticated()
+        return login.current_user.is_authenticated

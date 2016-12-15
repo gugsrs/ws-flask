@@ -22,11 +22,19 @@ def init_login(app):
 def init_admin(app):
     """Init flask admin"""
     from app.admin.views import AdminIndex
+    from app.admin.routes import MODEL_VIEWS
     admin = Admin(
         app, index_view=AdminIndex(),
         **app.config['ADMIN_KWARGS']
     )
-    # admin add_views
+    for category, views_set in MODEL_VIEWS:
+        for model, view in views_set:
+            endpoint = '{}_admin'.format(model.__tablename__)
+            admin.add_view(view(
+                model=model, session=db.session,
+                endpoint=endpoint,
+                category=category,
+            ))
 
 
 def create_app(settings):

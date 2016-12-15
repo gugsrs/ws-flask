@@ -35,3 +35,19 @@ class AdminIndex(admin.AdminIndexView):
         """Controller for login out from flask-login."""
         login.logout_user()
         return redirect_to('.index')
+
+
+class AdminUser(utils.BaseModelView):
+    """Custom flask-admin blueprint for AdminUser"""
+    column_sortable_list = ['email']
+    column_list = ['email']
+    form = forms.AdminUserForm
+        
+    def create_model(self, form):
+        """Customisation of flask-admin create_model for AdminUser."""
+        form.password.data = generate_password_hash(form.password.data)
+        return super(AdminUser, self).create_model(form)
+
+    def update_model(self, form, obj):
+        form.password.data = generate_password_hash(form.password.data)
+        return super(AdminUser, self).updateform(form, obj)
