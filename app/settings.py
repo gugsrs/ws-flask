@@ -25,6 +25,8 @@ class Settings(Path):
         'template_mode': 'bootstrap3',
     }
 
+    LOG_FILE = os.path.expanduser('~/log/app.log')
+
 
 class Production(Settings):
     # Change values for production
@@ -41,7 +43,7 @@ class Production(Settings):
 
 
 class Development(Settings):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:////drinke'
     #SQLALCHEMY_DATABASE_URI = (
     #    '{engine}://{auth_user}:{auth_passwd}@{url}/{name}'.format(
     #        engine='postgresql',

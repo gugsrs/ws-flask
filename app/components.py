@@ -1,3 +1,4 @@
+import logging
 from functools import partial
 
 from flask import Flask
@@ -37,6 +38,13 @@ def init_admin(app):
             ))
 
 
+def init_logging(app):
+    if not (app.testing or app.debug):
+        handler = logging.handlers.RotatingFileHandler(app.config['LOG_FILE'])
+        handler.setLevel(logging.INFO)
+        app.logger.addHandler(handler)
+
+
 def create_app(settings):
     """Create flask app"""
     app = Flask(
@@ -46,7 +54,9 @@ def create_app(settings):
     )
 
     app.config.from_object(settings)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
+    # init logging
+    init_logging(app)
 
     # init db
     db.init_app(app)
